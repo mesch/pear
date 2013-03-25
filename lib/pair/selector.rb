@@ -1,7 +1,5 @@
 module Pair
   class Selector
-    DEVELOPERS = [:dj,:ja,:jr,:me,:nl,:pj,:pk,:tc]
-    NUM_SAMPLES = 1000
     attr_accessor :schedule, :day
 
     def initialize()
@@ -13,8 +11,8 @@ module Pair
       #schedule.data.each { |k,v| puts "#{k} -> #{v.inspect}"}
       best_pair_group = []
       min_score = Float::MAX
-      NUM_SAMPLES.times do |i|
-        pair_group = Pair::Generator.new(DEVELOPERS.dup).random(required_pairs)
+      Pair.num_samples.times do |i|
+        pair_group = Pair::Generator.new(Pair.developers.dup).random(required_pairs)
         #puts pair_group.inspect
         score = calculate_score(pair_group)
         #puts score

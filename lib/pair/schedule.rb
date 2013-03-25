@@ -3,9 +3,7 @@ require 'yaml'
 module Pair
   class Schedule
 
-    SCHEDULE_FILE = 'pairing_schedule.yml'
-
-    def initialize(file=SCHEDULE_FILE)
+    def initialize(file=Pair.schedule_file)
       @file = file
     end
 
