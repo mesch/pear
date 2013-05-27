@@ -8,7 +8,6 @@ module Pair
   config = ParseConfig.new(config_file)
   @developers = config["developers"]
   @schedule_file = config["schedule_file"]
-  @num_samples = config["num_samples"]
 
   def self.developers
     @developers ? eval(@developers) : []
@@ -16,10 +15,6 @@ module Pair
 
   def self.schedule_file
     @schedule_file ? @schedule_file : 'pairing_schedule.yml'
-  end
-
-  def self.num_samples
-    @num_samples ? @num_samples.to_i : 1000
   end
 
 end

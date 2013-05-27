@@ -1,39 +1,60 @@
 module Pair
   class Generator
-    attr_accessor :developers, :pairs
+    attr_accessor :pair_combinations
+    attr_reader :developers, :required_anchors
 
-    def initialize(developers)
+    ### TODO: test for required_anchors in required_pairs
+    def initialize(developers,required_pairs=[[]],required_anchors=[])
       @developers = developers
-      @pairs = []
+      @pair_combinations = required_pairs
+      @required_anchors = required_anchors
     end
 
-    def random(required_pairs)
-      remove_developers(required_pairs)
-      required_pairs.each do |required_pair|
-        pairs << generate_required_pair(required_pair)
+    def combinations()
+      add_anchors
+      until done? do
+        add_pair
       end
-      while developers.size > 0
-        pairs << generate_pair()
-      end
-      pairs
+      pair_combinations
     end
 
     private
 
-    def generate_required_pair(required_pair)
-      if required_pair.last == :any
-        required_pair[1] = developers.sample
+    def add_anchors
+      new_combinations = []
+      required_anchors.each do |anchor|
+        pair_combinations.each do |pair_combination|
+          remaining_developers = developers - pair_combination.flatten - required_anchors
+          remaining_developers.each do |developer|
+            new_combinations << (pair_combination.dup << [anchor, developer])
+          end
+        end
+        @pair_combinations = new_combinations
       end
-      remove_developers(required_pair)
     end
 
-    def generate_pair(required_pair=nil)
-      pair = developers.sample(2)
-      remove_developers(pair)
+    def done?
+      pair_combinations.each do |pair_combination|
+        if pair_combination.flatten.sort != developers.sort
+          return false
+        end
+      end
+      true
     end
 
-    def remove_developers(remove_list)
-      remove_list.flatten.each { |elem| developers.delete(elem) }
+    def add_pair
+      new_combinations = []
+      pair_combinations.each do |pair_combination|
+        remaining_developers = developers - pair_combination.flatten
+        if remaining_developers.size.odd?
+          new_combinations << (pair_combination.dup << [remaining_developers.first])
+        end
+        first = remaining_developers.delete(remaining_developers.first)
+        remaining_developers.each do |developer|
+          new_combinations << (pair_combination.dup << [first,developer])
+        end
+      end
+      @pair_combinations = new_combinations
     end
 
   end

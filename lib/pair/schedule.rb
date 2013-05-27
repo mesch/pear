@@ -3,6 +3,7 @@ require 'yaml'
 module Pair
   class Schedule
 
+    ### TODO rspec tests?
     def initialize(file=Pair.schedule_file)
       @file = file
     end
